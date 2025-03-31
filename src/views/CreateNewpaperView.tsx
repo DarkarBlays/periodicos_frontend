@@ -13,11 +13,7 @@ export default function CreateNewpaperView() {
     titulo: "",
     fecha: "",
     precio: 0,
-    archivo: {
-      name: "",
-      size: 0,
-      type: "application/pdf",
-    },
+    archivo: File,
   };
 
   const {
