@@ -1,26 +1,42 @@
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  Control,
+  useWatch,
+} from "react-hook-form";
 import { NewpaperFormData } from "../types";
 import ErrorMessage from "./ErrorMessage";
 
 type NewpaperFormProps = {
   register: UseFormRegister<NewpaperFormData>;
   errors: FieldErrors<NewpaperFormData>;
+  setValue: UseFormSetValue<NewpaperFormData>;
+  control: Control<NewpaperFormData>;
 };
 
-export default function NewpaperForm({ errors, register }: NewpaperFormProps) {
+export default function NewpaperForm({
+  register,
+  errors,
+  setValue,
+  control,
+}: NewpaperFormProps) {
+  // Escuchar el archivo cargado
+  const archivo = useWatch({ control, name: "archivo" });
+
   return (
     <>
       <div className="mb-5 space-y-3">
         <label htmlFor="titulo" className="text-sm uppercase font-bold">
-          Nombre del Periodico
+          Nombre del Periódico
         </label>
         <input
           id="titulo"
-          className="w-full p-3  border border-gray-200"
+          className="w-full p-3 border border-gray-200"
           type="text"
-          placeholder="Nombre del Periodico"
+          placeholder="Nombre del Periódico"
           {...register("titulo", {
-            required: "El Titulo del periodico es obligatorio",
+            required: "El título del periódico es obligatorio",
           })}
         />
         {errors.titulo && <ErrorMessage>{errors.titulo.message}</ErrorMessage>}
@@ -28,15 +44,15 @@ export default function NewpaperForm({ errors, register }: NewpaperFormProps) {
 
       <div className="mb-5 space-y-3">
         <label htmlFor="precio" className="text-sm uppercase font-bold">
-          Precio del Periodico
+          Precio del Periódico
         </label>
         <input
           id="precio"
-          className="w-full p-3  border border-gray-200"
+          className="w-full p-3 border border-gray-200"
           type="number"
           placeholder="$12000"
           {...register("precio", {
-            required: "El precio del periodico es obligatorio",
+            required: "El precio del periódico es obligatorio",
           })}
         />
         {errors.precio && <ErrorMessage>{errors.precio.message}</ErrorMessage>}
@@ -44,14 +60,14 @@ export default function NewpaperForm({ errors, register }: NewpaperFormProps) {
 
       <div className="mb-5 space-y-3">
         <label htmlFor="fecha" className="text-sm uppercase font-bold">
-          Fecha del Periodico
+          Fecha del Periódico
         </label>
         <input
           id="fecha"
-          className="w-full p-3  border border-gray-200"
+          className="w-full p-3 border border-gray-200"
           type="date"
           {...register("fecha", {
-            required: "La fecha del periodico es obligatorio",
+            required: "La fecha del periódico es obligatoria",
           })}
         />
         {errors.fecha && <ErrorMessage>{errors.fecha.message}</ErrorMessage>}
@@ -77,11 +93,21 @@ export default function NewpaperForm({ errors, register }: NewpaperFormProps) {
             type="file"
             className="hidden"
             accept=".pdf"
-            {...register("archivo", {
-              required: "El archivo del periodico es obligatorio",
-            })}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) setValue("archivo", file);
+            }}
           />
         </label>
+
+        {/* Mostrar nombre del archivo */}
+        {archivo && (
+          <p className="text-sm text-gray-600 mt-2">
+            Archivo seleccionado:{" "}
+            <span className="font-medium">{archivo.name}</span>
+          </p>
+        )}
+
         {errors.archivo && (
           <ErrorMessage>{errors.archivo.message}</ErrorMessage>
         )}

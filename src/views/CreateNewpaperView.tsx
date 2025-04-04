@@ -13,12 +13,14 @@ export default function CreateNewpaperView() {
     titulo: "",
     fecha: "",
     precio: 0,
-    archivo: File,
+    archivo: undefined,
   };
 
   const {
     register,
     handleSubmit,
+    setValue,
+    control,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
@@ -27,13 +29,16 @@ export default function CreateNewpaperView() {
     onError: (error) => {
       toast.error(error.message);
     },
-    onSuccess: (data) => {
-      toast.success(data);
+    onSuccess: () => {
+      toast.success("Periódico creado correctamente");
       navigate("/");
     },
   });
 
-  const handleForm = (formData: NewpaperFormData) => mutate(formData);
+  const handleForm = (formData: NewpaperFormData) => {
+    formData.precio = Number(formData.precio); // Convertir precio a número
+    mutate(formData);
+  };
 
   return (
     <>
@@ -57,7 +62,12 @@ export default function CreateNewpaperView() {
           onSubmit={handleSubmit(handleForm)}
           noValidate
         >
-          <NewpaperForm register={register} errors={errors} />
+          <NewpaperForm
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            control={control}
+          />
           <input
             type="submit"
             value="Crear Periodico"
