@@ -5,8 +5,8 @@ import {
   Control,
   useWatch,
 } from "react-hook-form";
-import { NewpaperFormData } from "../types";
-import ErrorMessage from "./ErrorMessage";
+import { NewpaperFormData } from "../../types";
+import ErrorMessage from "../ErrorMessage";
 
 type NewpaperFormProps = {
   register: UseFormRegister<NewpaperFormData>;
@@ -95,7 +95,21 @@ export default function NewpaperForm({
             accept=".pdf"
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) setValue("archivo", file);
+              if (file) {
+                const mappedFile = {
+                  id: 0, // Replace with actual ID if available
+                  name: file.name,
+                  url: "", // Replace with actual URL if available
+                  mime: file.type,
+                  size: file.size,
+                  hash: "", // Replace with actual hash if available
+                  ext: file.name.split('.').pop() || "",
+                  createdAt: new Date().toISOString(), // Replace with actual date if available
+                  updatedAt: new Date().toISOString(), // Replace with actual date if available
+                  publishedAt: new Date().toISOString(), // Replace with actual date if available
+                };
+                setValue("archivo", mappedFile);
+              }
             }}
           />
         </label>

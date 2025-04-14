@@ -1,15 +1,18 @@
 import api from "../lib/axios";
 import { isAxiosError } from "axios";
-import { NewpaperFormData } from "../types";
+import { homeNewpaperSchema, Newpaper, NewpaperFormData } from "../types";
 
 export async function createNewpaper(formData: NewpaperFormData) {
   try {
     let uploadedFileId: number;
 
-    // 1️⃣ Subir archivo si existe
     if (formData.archivo) {
       const uploadForm = new FormData();
-      uploadForm.append("files", formData.archivo);
+      if (formData.archivo instanceof File) {
+        uploadForm.append("files", formData.archivo);
+      } else {
+        throw new Error("El archivo proporcionado no es un Blob válido.");
+      }
 
       const uploadResponse = await api.post("/upload", uploadForm, {
         headers: {
@@ -50,6 +53,41 @@ export async function createNewpaper(formData: NewpaperFormData) {
       );
     } else {
       throw new Error("Error inesperado.");
+    }
+  }
+}
+
+
+export async function getNewpapers() {
+  try {
+    const { data } = await api("/periodicos?populate=archivo");
+    const response = homeNewpaperSchema.safeParse(data);
+
+    if (response.success) {
+      return response.data.data;
+    }
+    
+  } catch (error) {
+    console.error(error);
+    if (isAxiosError(error) && error.response) {
+      throw new Error(
+        error.response.data?.error?.message ||
+        error.response.data?.message ||
+        "Error al crear el periódico."
+      );
+    } else {
+      throw new Error("Error inesperado.");
+    }
+  }
+}
+
+export async function getNewpaperById(id:Newpaper['id']) {
+  try {
+    const {data} = await api(`/periodicos/${id}`)
+    return data
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
     }
   }
 }

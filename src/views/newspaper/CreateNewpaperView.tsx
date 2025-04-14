@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import NewpaperForm from "../components/NewpaperForm";
+import NewpaperForm from "../../components/newspaper/NewpaperForm";
 import { toast } from "react-toastify";
-import { NewpaperFormData } from "../types";
-import { createNewpaper } from "../api/NewpaperAPI";
+import { NewpaperFormData } from "../../types";
+import { createNewpaper } from "../../api/NewpaperAPI";
 
 export default function CreateNewpaperView() {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ export default function CreateNewpaperView() {
 
   return (
     <>
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto font-serif">
         <h1 className="text-5xl font-black">Crear Periodico</h1>
         <p className="text-2xl font-light text-gray-500 mt-5">
           Llena el siguiente formulario para crear un periodico
@@ -50,7 +50,7 @@ export default function CreateNewpaperView() {
 
         <nav className="my-5">
           <Link
-            className="bg-red-400 hover:bg-red-500 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
+            className="bg-red-500 hover:bg-red-600 px-10 py-3 text-white text-xl font-bold cursor-pointer transition-colors"
             to="/"
           >
             Volver a Periodicos
