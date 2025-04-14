@@ -2,10 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Newpaper, NewpaperFormData } from "../../types";
 import NewpaperForm from "./NewpaperForm";
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { updateNewpaper } from "../../api/NewpaperAPI";
 
 type EditNewpaperFormProps = {
   data: NewpaperFormData;
-  newpaperId: Newpaper["id"];
+  newpaperId: Newpaper["documentId"];
 };
 export default function EditNewpaperForm({
   data,
@@ -19,14 +22,38 @@ export default function EditNewpaperForm({
     setValue,
     control,
     formState: { errors },
-  } = useForm({
+  } = useForm<NewpaperFormData>({
     defaultValues: {
       titulo: data.titulo,
       fecha: data.fecha,
       precio: data.precio,
-      archivo: data.archivo?.url,
+      archivo: data.archivo,
     },
   });
+  
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: updateNewpaper,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["periodicos"] });
+      queryClient.invalidateQueries({ queryKey: ["editNewpaper", newpaperId] });
+      toast.success("Periódico editado correctamente");
+      navigate("/");
+    },
+  });
+
+  const handleForm = (formData: NewpaperFormData) => {
+    const data = {
+      formData,
+      newpaperId,
+    };
+    mutate(data);
+  };
+
   return (
     <>
       <div className="max-w-3xl mx-auto font-serif">
@@ -57,7 +84,7 @@ export default function EditNewpaperForm({
           />
           <input
             type="submit"
-            value="Crear Periodico"
+            value="Guardar Cambios"
             className="bg-red-600 hover:bg-red-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
           />
         </form>

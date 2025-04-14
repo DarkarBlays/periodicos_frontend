@@ -70,7 +70,7 @@ export default function Home() {
                     <MenuItems className="absolute right-0 mt-2 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-30">
                       <MenuItem>
                         <Link
-                          to={`/newspaper/${periodico.id}/edit`}
+                          to={`/newspaper/${periodico.documentId}/edit`}
                           className="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100"
                         >
                           Editar

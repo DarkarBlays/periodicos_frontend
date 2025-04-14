@@ -15,6 +15,7 @@ export const archivoSchema = z.object({
 
 export const newpaperSchema = z.object({
   id: z.number(),
+  documentId: z.string(),
   titulo: z.string().min(1, "El título es obligatorio"),
   fecha: z.string(),
   precio: z.number().min(0, "El precio no puede ser negativo"),
